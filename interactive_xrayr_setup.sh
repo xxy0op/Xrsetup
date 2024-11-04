@@ -16,7 +16,8 @@ fi
 read -p "请输入您的 GitHub 个人访问令牌 (PAT): " GITHUB_TOKEN
 
 # 定义 GitHub 配置文件的 URL，请替换为你的实际 GitHub 用户名和仓库名
-GITHUB_CONFIG_URL="https://$GITHUB_TOKEN@raw.githubusercontent.com/xxy0op/Xrsetup/main/config.yml"
+GITHUB_CONFIG_URL="https://$GITHUB_TOKEN@raw.githubusercontent.com/xxy0op/XrayR-config/main/config.yml"
+
 
 # 创建目录 /etc/XrayR（如果不存在）
 if [ ! -d "/etc/XrayR" ]; then
