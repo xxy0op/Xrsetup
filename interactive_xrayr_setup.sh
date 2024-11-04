@@ -18,7 +18,6 @@ read -p "请输入您的 GitHub 个人访问令牌 (PAT): " GITHUB_TOKEN
 # 定义 GitHub 配置文件的 URL，请替换为你的实际 GitHub 用户名和仓库名
 GITHUB_CONFIG_URL="https://$GITHUB_TOKEN@raw.githubusercontent.com/xxy0op/XrayR-config/main/config.yml"
 
-
 # 创建目录 /etc/XrayR（如果不存在）
 if [ ! -d "/etc/XrayR" ]; then
     sudo mkdir -p "/etc/XrayR"
@@ -39,24 +38,11 @@ fi
 read -p "请输入第一个 NodeID 值 (上方): " NODE_ID_TOP
 read -p "请输入第二个 NodeID 值 (下方): " NODE_ID_BOTTOM
 
-# 使用 awk 替换特定行的 NodeID 值，并保存到临时文件
-sudo awk -v node_top="$NODE_ID_TOP" -v node_bottom="$NODE_ID_BOTTOM" '
-    BEGIN { top_replaced=0; bottom_replaced=0 }
-    /NodeID:/ && top_replaced == 0 { gsub(/NodeID:.*/, "NodeID: " node_top); top_replaced=1 }
-    /NodeID:/ && top_replaced == 1 && bottom_replaced == 0 { gsub(/NodeID:.*/, "NodeID: " node_bottom); bottom_replaced=1 }
-    { print }
-' /etc/XrayR/config.yml > /etc/XrayR/config_temp.yml
+# 使用行号替换指定行的 NodeID 值
+sudo sed -i "20s/NodeID: [0-9]*/NodeID: $NODE_ID_TOP/" /etc/XrayR/config.yml
+sudo sed -i "85s/NodeID: [0-9]*/NodeID: $NODE_ID_BOTTOM/" /etc/XrayR/config.yml
 
-# 检查临时文件是否成功生成
-if [ ! -s /etc/XrayR/config_temp.yml ]; then
-    echo "配置文件替换失败，请检查 awk 命令或文件路径。"
-    exit 1
-fi
-
-# 将临时文件覆盖原配置文件
-sudo mv /etc/XrayR/config_temp.yml /etc/XrayR/config.yml
-
-echo "配置文件中的 NodeID 已替换为 $NODE_ID_TOP（上方）和 $NODE_ID_BOTTOM（下方）"
+echo "配置文件中的 NodeID 已替换为 $NODE_ID_TOP（上方，第20行）和 $NODE_ID_BOTTOM（下方，第60行）"
 
 # 重启 XrayR 服务
 echo "重启 XrayR 服务以应用新配置..."
