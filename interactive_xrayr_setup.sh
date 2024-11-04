@@ -38,13 +38,22 @@ fi
 read -p "请输入第一个 NodeID 值 (上方): " NODE_ID_TOP
 read -p "请输入第二个 NodeID 值 (下方): " NODE_ID_BOTTOM
 
-# 使用 awk 替换特定行的 NodeID 值
+# 使用 awk 替换特定行的 NodeID 值，并保存到临时文件
 sudo awk -v node_top="$NODE_ID_TOP" -v node_bottom="$NODE_ID_BOTTOM" '
     BEGIN { top_replaced=0; bottom_replaced=0 }
     /NodeID:/ && top_replaced == 0 { gsub(/NodeID:.*/, "NodeID: " node_top); top_replaced=1 }
     /NodeID:/ && top_replaced == 1 && bottom_replaced == 0 { gsub(/NodeID:.*/, "NodeID: " node_bottom); bottom_replaced=1 }
     { print }
-' /etc/XrayR/config.yml > /etc/XrayR/config_temp.yml && sudo mv /etc/XrayR/config_temp.yml /etc/XrayR/config.yml
+' /etc/XrayR/config.yml > /etc/XrayR/config_temp.yml
+
+# 检查临时文件是否成功生成
+if [ ! -s /etc/XrayR/config_temp.yml ]; then
+    echo "配置文件替换失败，请检查 awk 命令或文件路径。"
+    exit 1
+fi
+
+# 将临时文件覆盖原配置文件
+sudo mv /etc/XrayR/config_temp.yml /etc/XrayR/config.yml
 
 echo "配置文件中的 NodeID 已替换为 $NODE_ID_TOP（上方）和 $NODE_ID_BOTTOM（下方）"
 
