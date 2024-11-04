@@ -16,7 +16,7 @@ fi
 read -p "请输入您的 GitHub 个人访问令牌 (PAT): " GITHUB_TOKEN
 
 # 定义 GitHub 配置文件的 URL，请替换为你的实际 GitHub 用户名和仓库名
-GITHUB_CONFIG_URL="https://$GITHUB_TOKEN@raw.githubusercontent.com/xxy0op/XrayR-config/main/config.yml"
+GITHUB_CONFIG_URL="https://$GITHUB_TOKEN@raw.githubusercontent.com/xxy0op/Xrsetup/main/config.yml"
 
 # 创建目录 /etc/XrayR（如果不存在）
 if [ ! -d "/etc/XrayR" ]; then
@@ -35,13 +35,13 @@ if [ $? -ne 0 ]; then
 fi
 
 # 交互式输入 NodeID
-read -p "请输入第一个 NodeID 值: " NODE_ID_TOP
-read -p "请输入第二个 NodeID 值: " NODE_ID_BOTTOM
+read -p "请输入第一个 NodeID 值 (上方): " NODE_ID_TOP
+read -p "请输入第二个 NodeID 值 (下方): " NODE_ID_BOTTOM
 
-# 替换 NodeID 值
+# 使用明确的顺序替换 NodeID 值
 sudo sed -i "0,/NodeID:.*/s/NodeID:.*/NodeID: $NODE_ID_TOP/" /etc/XrayR/config.yml
-sudo sed -i "1,/NodeID:.*/s/NodeID:.*/NodeID: $NODE_ID_BOTTOM/" /etc/XrayR/config.yml
-echo "配置文件中的 NodeID 已替换为 $NODE_ID_TOP 和 $NODE_ID_BOTTOM"
+sudo sed -i "0,/NodeID:.*/s/NodeID:.*/NodeID: $NODE_ID_BOTTOM/" /etc/XrayR/config.yml
+echo "配置文件中的 NodeID 已替换为 $NODE_ID_TOP（上方）和 $NODE_ID_BOTTOM（下方）"
 
 # 重启 XrayR 服务
 echo "重启 XrayR 服务以应用新配置..."
