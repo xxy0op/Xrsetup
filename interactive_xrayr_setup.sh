@@ -42,7 +42,7 @@ read -p "请输入第二个 NodeID 值 (下方): " NODE_ID_BOTTOM
 sudo sed -i "20s/NodeID: [0-9]*/NodeID: $NODE_ID_TOP/" /etc/XrayR/config.yml
 sudo sed -i "85s/NodeID: [0-9]*/NodeID: $NODE_ID_BOTTOM/" /etc/XrayR/config.yml
 
-echo "配置文件中的 NodeID 已替换为 $NODE_ID_TOP（上方，第20行）和 $NODE_ID_BOTTOM（下方，第60行）"
+echo "配置文件中的 NodeID 已替换为 $NODE_ID_TOP（上方，第20行）和 $NODE_ID_BOTTOM（下方，第85行）"
 
 # 重启 XrayR 服务
 echo "重启 XrayR 服务以应用新配置..."
